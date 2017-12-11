@@ -84,7 +84,7 @@ Remember to export it to your PATH
 #### Now with all components running, let's deploy a sample application
 
 
-`$ kubectl apply -f <(istioctl kube-inject -f istio/bookinfo/bookinfo.yaml)`
+`$ kubectl apply -f <(istioctl kube-inject -f bookinfo/kube/bookinfo.yaml)`
 
 ###### You can get the source <i>[here](https://github.com/istio/istio/tree/release-0.1/samples/apps/bookinfo)</i>
 
