@@ -14,36 +14,36 @@ First of all, you'll need an running kubernetes cluster, an easy way is using ko
 How-to Install [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ### Install kops
-` wget https://github.com/kubernetes/kops/releases/download/1.7.1/kops-linux-amd64 `
+`$ wget https://github.com/kubernetes/kops/releases/download/1.7.1/kops-linux-amd64 `
 
-` chmod +x kops-linux-amd64 `
+`$ chmod +x kops-linux-amd64 `
 
-` mv kops-linux-amd64 /usr/local/bin/kops `
+`$ mv kops-linux-amd64 /usr/local/bin/kops `
 
 ### Install aws CLI
 
-` pip install awscli --upgrade --user `
+`$ pip install awscli --upgrade --user `
 
 ### Prepare your Cluster
 
-`aws configure` - configure your credentials to access aws
+`$ aws configure` - configure your credentials to access aws
 
-`export S3_BUCKET=SomeGoodName` - The name of a bucket to store your cluster config files
+`$ export S3_BUCKET=SomeGoodName` - The name of a bucket to store your cluster config files
 
-`export REGION=us-west-1` - The name of aws region where your cluster will be created
+`$ export REGION=us-west-1` - The name of aws region where your cluster will be created
 
-`export NAME=GoodNameForYourCluster` - Your Cluster Name
+`$ export NAME=GoodNameForYourCluster` - Your Cluster Name
 
-`export KOPS_STATE_STORE=s3://$S3_BUCKET` - s3 storage name
+`$ export KOPS_STATE_STORE=s3://$S3_BUCKET` - s3 storage name
 
-`aws s3api create-bucket --bucket $S3_BUCKET --acl private --create-bucket-configuration LocationConstraint=$REGION` - Create s3 bucket
+`$ aws s3api create-bucket --bucket $S3_BUCKET --acl private --create-bucket-configuration LocationConstraint=$REGION` - Create s3 bucket
 
-`kops create cluster --zones us-west-1b --name $NAME` - Create files to create the k8s cluster
+`$ kops create cluster --zones us-west-1b --name $NAME` - Create files to create the k8s cluster
 ##### Now you can change the size and others details of your cluster.
 
 
 ### Apply/Create your Cluster
-`kops update cluster $NAME --yes`
+`$ kops update cluster $NAME --yes`
 
 ##
 ### Now access you cluster, and let's get ready to rumble !
@@ -51,7 +51,7 @@ How-to Install [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/
 
 ### Install Istio CLI
 
-`  curl -L http://assets.joinscrapbook.com/istio/getLatestIstio | sh - `
+`$ curl -L http://assets.joinscrapbook.com/istio/getLatestIstio | sh - `
 
 Remember to export it to your PATH
 
@@ -60,37 +60,37 @@ Remember to export it to your PATH
 #### Insert IMAGE of Istio Infra
 
 
-`kubectl apply -f istio.yaml`
+`$ kubectl apply -f istio.yaml`
 
 
 ### Deploy Prometheus
-`kubectl apply -f prometheus.yaml`
+`$ kubectl apply -f prometheus.yaml`
 
 ### Deploy Grafana
-`kubectl apply -f grafana.yaml`
+`$ kubectl apply -f grafana.yaml`
 
 ### Deploy ServiceGraph
-`kubectl apply -f servicegraph.yaml`
+`$ kubectl apply -f servicegraph.yaml`
 
 ### Deploy Zipkin
-`kubectl apply -f zipkin.yaml`
+`$ kubectl apply -f zipkin.yaml`
 
 
 ### Check all running pods
-`kubectl get pods -n istio-system`
+`$ kubectl get pods -n istio-system`
 
 ##
 
 #### Now with all components running, let's deploy a sample application
 
 
-`kubectl apply -f <(istioctl kube-inject -f istio/bookinfo/bookinfo.yaml)`
+`$ kubectl apply -f <(istioctl kube-inject -f istio/bookinfo/bookinfo.yaml)`
 
 ###### You can get the source <i>[here](https://github.com/istio/istio/tree/release-0.1/samples/apps/bookinfo)</i>
 
 ##### This will create the application and his LoadBalancer, now access the application
 
-`kubectl describe ingress`
+`$ kubectl describe ingress`
 ###### This show the address to access the application
 
 
@@ -165,8 +165,7 @@ spec:
 
 #### List all istio route rules
 
-`istioctl get routerules`
-
+`$ istioctl get routerules`
 
 
 .... still writing...
