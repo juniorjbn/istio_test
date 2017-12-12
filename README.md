@@ -179,17 +179,44 @@ done
 ```
 
 
+##### Finaly you can access your dashboards. You can look into each service and took the address, but each one has a different port, so here some shotcuts:
 
-.... still writing...
+#### Grafana
+`$ echo $(kubectl -n istio-system get svc grafana -o jsonpath={.status.loadBalancer.ingress[0].hostname}):3000/dashboard/db/istio-dashboard`
+
+#### Prometheus
+`$ echo $(kubectl -n istio-system get svc prometheus -o jsonpath={.status.loadBalancer.ingress[0].hostname}):9090/graph`
+
+#### ServiceGraph
+`$ echo $(kubectl -n istio-system get svc servicegraph -o jsonpath={.status.loadBalancer.ingress[0].hostname}):8088/dotviz`
+
+#### Zipkin
+`$ echo $(kubectl -n istio-system get svc zipkin -o jsonpath={.status.loadBalancer.ingress[0].hostname}):9411/zipkin/?serviceName=productpage`
+
+
+### Weave Scope
+
+###### While Service Graph displays a high-level overview of how systems are connected, a tool called Weave Scope provides a powerful visualisation and debugging tool for the entire cluster.Using Scope it's possible to see what processes are running within each pod and which pods are communicating with each other. This allows users to understand how Istio and their application is behaving.
+
+#### Create Weave pods
+
+`$ kubectl apply --namespace istio-system -f "https://cloud.weave.works/k8s/scope.yaml?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
+
+
+###### See the weave running 
+`$ kubectl port-forward -n istio-system "$(kubectl get -n istio-system pod --selector=weave-scope-component=app -o jsonpath='{.items..metadata.name}')" 4040`
+
+
+###### Let's expose this
+
+`$ pod=$(kubectl get pod --selector=name=weave-scope-app -o jsonpath={.items..metadata.name} -n istio-system)`
+
+`$ kubectl expose pod $pod --external-ip="172.17.0.160" --port=4040 --target-port=4040 --type=LoadBalancer -n istio-system`
+
+##### Now access it !
+`$ echo $(kubectl -n istio-system get svc $pod -o jsonpath={.status.loadBalancer.ingress[0].hostname}):4040`
 
 
 
-##WEAVE##
-kubectl apply --namespace istio-system -f "https://cloud.weave.works/k8s/scope.yaml?k8s-version=$(kubectl version | base64 | tr -d '\n')"
 
-kubectl port-forward -n istio-system "$(kubectl get -n istio-system pod --selector=weave-scope-component=app -o jsonpath='{.items..metadata.name}')" 4040
-
-
-pod=$(kubectl get pod --selector=name=weave-scope-app -o jsonpath={.items..metadata.name} -n istio-system)
-
-kubectl expose pod $pod --external-ip="172.17.0.70" --port=4040 --target-port=4040 --type=LoadBalancer -n istio-system
+######### .... more will come ....
