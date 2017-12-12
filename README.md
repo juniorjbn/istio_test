@@ -93,7 +93,7 @@ Remember to export it to your PATH
 `$ kubectl describe ingress`
 ###### This show the address to access the application, so you use that and "/productpage"
 
-e.g: `$ kubectl describe ingress | grep Address | awk '{print $2 "/productpage"}'`
+e.g: `$ echo $(kubectl get ingress gateway -o jsonpath={.status.loadBalancer.ingress[0].hostname})/productpage`
 ##### If everything its ok, you may see the productpage sample.
 
 ### Now you gave the wheel of your application for <b>istio</b> and this is a good thing, it main feature is <i>traffic management</i>, and now its is available to you.
@@ -171,8 +171,9 @@ spec:
 ##### Now let's create some load on our app
 
 ```
+dest=$(kubectl get ingress gateway -o jsonpath={.status.loadBalancer.ingress[0].hostname})
 while true; do
-  curl -s `kubectl describe ingress | grep Address | awk '{print $2 "/productpage"}'`  > /dev/null
+  curl -s $dest/productpage  > /dev/null
   echo -n .;
   sleep 0.2
 done
